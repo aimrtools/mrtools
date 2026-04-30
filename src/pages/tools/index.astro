@@ -1,26 +1,59 @@
 ---
-const tools = Object.values(
+const modules = Object.entries(
   import.meta.glob('./**/*.astro', { eager: true })
-)
-  .map((mod) => {
-    const path = mod.file.split('/src/pages')[1].replace('.astro', '');
-    return {
-      url: path,
-      ...mod.meta
-    };
+);
+
+const tools = modules
+  .map(([file, mod]) => {
+    if (!mod.meta) return null;
+
+    const url = file
+      .replace('/src/pages', '')
+      .replace('.astro', '');
+
+    return { url, ...mod.meta };
   })
-  .filter(t => t.title); // hanya yang punya meta
+  .filter(Boolean);
 ---
+
+<style>
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  border: 1px solid #eee;
+  padding: 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+</style>
 
 <h1>All Tools</h1>
 
-<ul>
+<div class="grid">
   {tools.map(tool => (
-    <li>
-      <a href={tool.url}>
-        <h2>{tool.title}</h2>
-        <p>{tool.description}</p>
-      </a>
-    </li>
+    <a href={tool.url} class="card">
+      <h2>{tool.icon || "🛠️"} {tool.title}</h2>
+      <p>{tool.description}</p>
+    </a>
   ))}
-</ul>
+</div>
+
+<section>
+  <h2>Tools Gratis Online</h2>
+  <p>
+    Kumpulan tools gratis untuk membantu kebutuhan SEO, teks, audio,
+    dan lainnya. Semua tools dapat digunakan langsung tanpa instalasi.
+  </p>
+</section>
