@@ -1,1 +1,26 @@
-tes
+---
+const tools = Object.values(
+  import.meta.glob('./**/*.astro', { eager: true })
+)
+  .map((mod) => {
+    const path = mod.file.split('/src/pages')[1].replace('.astro', '');
+    return {
+      url: path,
+      ...mod.meta
+    };
+  })
+  .filter(t => t.title); // hanya yang punya meta
+---
+
+<h1>All Tools</h1>
+
+<ul>
+  {tools.map(tool => (
+    <li>
+      <a href={tool.url}>
+        <h2>{tool.title}</h2>
+        <p>{tool.description}</p>
+      </a>
+    </li>
+  ))}
+</ul>
